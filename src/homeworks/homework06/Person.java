@@ -5,20 +5,19 @@ import java.util.Objects;
 
 public class Person {
     private String name;
-    private Long money;
-    private Product[] products = new Product[10];
+    private Double money;
+    private Product[] products = new Product[0];
 
-    public Person(String name, Long money, Product[] products) {
+    public Person(String name, Double money) {
         this.name = name;
         this.money = money;
-        this.products = products;
     }
 
     public String getName() {
         return name;
     }
 
-    public Long getMoney() {
+    public Double getMoney() {
         return money;
     }
 
@@ -27,15 +26,31 @@ public class Person {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (!name.isEmpty()) {
+            this.name = name;
+        } else {
+            System.out.println("Имя не может быть пустым");
+        }
     }
 
-    public void setMoney(Long money) {
-        this.money = money;
+    public void setMoney(Double money) {
+        if (money < 0) {
+            System.out.println("Деньги не могут быть отрицательными");
+        } else {
+            this.money = money;
+        }
     }
 
-    public void setProducts(Product[] products) {
-        this.products = products;
+    public void addProducts(Product product) {
+        if (this.money >= product.getCost()) {
+            products = Arrays.copyOf(products, products.length + 1);
+            products[products.length - 1] = product;
+            this.money = this.money - product.getCost();
+            System.out.println(this.name + " купил(-а) " + product.getTitle());
+        } else {
+            System.out.println(this.name + " не может позолить себе " +
+                    product.getTitle());
+        }
     }
 
     @Override
@@ -53,10 +68,10 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" +
-                "name='" + name + '\'' +
-                ", money=" + money +
-                ", products=" + Arrays.toString(products) +
-                '}';
+        if (products.length == 0) {
+            return name + " - Ничего не куплено";
+        } else {
+            return name + " - " + Arrays.toString(products);
+        }
     }
 }
