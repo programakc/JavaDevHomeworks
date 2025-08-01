@@ -20,11 +20,15 @@ public class Product {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        if (!title.isEmpty()) {
+            this.title = title;
+        }
     }
 
     public void setCost(Double cost) {
-        this.cost = cost;
+        if (cost > 0) {
+            this.cost = cost;
+        }
     }
 
     @Override
@@ -42,9 +46,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "title='" + title + '\'' +
-                ", cost=" + cost +
-                '}';
+        return title;
     }
 }
