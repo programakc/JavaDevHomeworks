@@ -6,7 +6,7 @@ import java.util.Objects;
 public class User {
 
     private String id;
-    private LocalDateTime date;
+    private LocalDateTime date = LocalDateTime.now();
     private String login;
     private String password;
     private String confirmPassword;
@@ -14,12 +14,12 @@ public class User {
     private String firstName;
     private String middleName;
     private Integer age;
-    private Boolean isWorker;
+    private Boolean isWorker = false;
 
     public User() {
     }
 
-    public User (String inputLine) {
+    public User(String inputLine) {
         String[] params = inputLine.split("\\|");
 
         this.id = params[0];
@@ -37,15 +37,26 @@ public class User {
     public User(String id, LocalDateTime date, String login, String password,
                 String confirmPassword, String lastName, String firstName,
                 String middleName, Integer age, Boolean isWorker) {
+
         this.id = id;
         this.date = date;
-        this.login = login;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.age = age;
+
+        if (isCorrectLogin(login)) this.login = login;
+
+        if (isCorrectPassword(password)) this.password = password;
+
+        if (isCorrectConfirmPassword(password, confirmPassword))
+            this.confirmPassword =
+                    confirmPassword;
+
+        if (isCorrectLastName(lastName)) this.lastName = lastName;
+
+        if (isCorrectFirstName(firstName)) this.firstName = firstName;
+
+        if (isCorrectMiddleName(middleName)) this.middleName = middleName;
+
+        if (isCorrectAge(String.valueOf(age))) this.age = age;
+
         this.isWorker = isWorker;
     }
 
@@ -70,7 +81,7 @@ public class User {
     }
 
     public void setLogin(String login) {
-        this.login = login;
+        if (isCorrectLogin(login)) this.login = login;
     }
 
     public String getPassword() {
@@ -78,7 +89,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        if (isCorrectPassword(password)) this.password = password;
     }
 
     public String getConfirmPassword() {
@@ -86,7 +97,8 @@ public class User {
     }
 
     public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
+        if (isCorrectConfirmPassword(this.password, confirmPassword))
+            this.confirmPassword = confirmPassword;
     }
 
     public String getLastName() {
@@ -94,7 +106,7 @@ public class User {
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        if (isCorrectLastName(lastName)) this.lastName = lastName;
     }
 
     public String getFirstName() {
@@ -102,7 +114,7 @@ public class User {
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        if (isCorrectFirstName(firstName)) this.firstName = firstName;
     }
 
     public String getMiddleName() {
@@ -110,7 +122,7 @@ public class User {
     }
 
     public void setMiddleName(String middleName) {
-        this.middleName = middleName;
+        if (isCorrectMiddleName(middleName)) this.middleName = middleName;
     }
 
     public Integer getAge() {
@@ -118,7 +130,7 @@ public class User {
     }
 
     public void setAge(Integer age) {
-        this.age = age;
+        if (isCorrectAge(String.valueOf(age))) this.age = age;
     }
 
     public Boolean getWorker() {
@@ -166,5 +178,68 @@ public class User {
         return (id + "|" + date + "|" + login + "|" + password + "|"
                 + confirmPassword + "|" + lastName + "|" + firstName + "|"
                 + middleName + "|" + age + "|" + isWorker);
+    }
+
+    private Boolean isCorrectLogin(String login) {
+        if ((login.length() < 20 && !login.chars().allMatch(Character::isDigit))
+                && (login.matches("\\w+"))) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Недопустимый формат логина!");
+        }
+    }
+
+    private Boolean isCorrectPassword(String password) {
+        if ((password.length() < 20 && !password.chars().allMatch(Character::isLetter))
+                && (password.matches("\\w+"))) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Недопустимый формат пароля!");
+        }
+    }
+
+    private Boolean isCorrectConfirmPassword(String password, String confirmPassword) {
+        if (password.equals(confirmPassword)) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Пароли не совпадают!");
+        }
+    }
+
+    private Boolean isCorrectLastName(String lastName) {
+        if (lastName.chars().allMatch(Character::isLetter)) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Фамилия пользователя должна " +
+                    "содержать только буквы!");
+        }
+    }
+
+    private Boolean isCorrectFirstName(String firstName) {
+        if (firstName.chars().allMatch(Character::isLetter)) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Имя пользоателя должно " +
+                    "сожержать только буквы!");
+        }
+    }
+
+    private Boolean isCorrectMiddleName(String middleName) {
+        if (middleName.chars().allMatch(Character::isLetter) || middleName.isEmpty()) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Отчество пользователя должно " +
+                    "содержать только буквы либо отсутствовать!");
+        }
+    }
+
+    private Boolean isCorrectAge(String age) {
+        if ((age.chars().allMatch(Character::isDigit) && Integer.parseInt(age) > 0)
+                || age.isEmpty()) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Возраст пользователя должен " +
+                    "быть числом больше 0 либо отсутствовать!");
+        }
     }
 }

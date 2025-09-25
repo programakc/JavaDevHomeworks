@@ -7,7 +7,6 @@ import attestation.attestation01.repository.UsersRepository;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UsersRepositoryFileImpl implements UsersRepository {
 
@@ -93,7 +92,7 @@ public class UsersRepositoryFileImpl implements UsersRepository {
                      new BufferedWriter(new FileWriter(FILENAME))) {
 
             for (User u : USERS) {
-                bufferedWriter.write(u.toString());
+                bufferedWriter.write(u.toString() + "\n");
             }
 
         } catch (IOException e) {
