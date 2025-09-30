@@ -13,5 +13,6 @@ public class App {
         Integer test2 = DataProcessing.validateCount("Проверка");
 
         System.out.println(test2);
+
     }
 }
