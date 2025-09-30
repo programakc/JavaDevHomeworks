@@ -1,7 +1,5 @@
 package homeworks.homework13.utils;
 
-import java.sql.SQLOutput;
-
 public class DataProcessing {
 
     public static Integer parseCount(String str) {
