@@ -1,0 +1,22 @@
+create table if not exists "users"
+(
+    id bigserial primary key,
+    name varchar
+);
+
+create table if not exists "orders"
+(
+    id bigserial primary key,
+    buyer_id bigint references buyers(id),
+    order_date date,
+    count_orders bigint,
+    discount smallint
+);
+
+insert into buyers (name)
+    values ('Максим'), ('Юлия'), ('Ева'), ('Алиса');
+
+insert into "order" (buyer_id, order_date, count_orders, discount)
+    values (2, CURRENT_TIMESTAMP, 3, 10),
+           (4, CURRENT_TIMESTAMP, 1, 0),
+           (1, CURRENT_TIMESTAMP, 10, 25);
