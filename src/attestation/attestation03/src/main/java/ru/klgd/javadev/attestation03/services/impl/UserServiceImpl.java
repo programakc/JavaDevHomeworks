@@ -2,11 +2,13 @@ package ru.klgd.javadev.attestation03.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.klgd.javadev.attestation03.dto.UserRequest;
+import ru.klgd.javadev.attestation03.dto.UserResponse;
 import ru.klgd.javadev.attestation03.entities.User;
+import ru.klgd.javadev.attestation03.mapper.UserMapper;
 import ru.klgd.javadev.attestation03.repositories.UserRepository;
 import ru.klgd.javadev.attestation03.services.UserService;
 
-import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -15,45 +17,60 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public User createUser(String nickname, String password, String fio, Integer age,
-                           String email, LocalDate regdate) {
+    @Override
+    public UserResponse createUser(UserRequest userRequest) {
 
-        User user = new User(nickname, password, fio, age, email, regdate);
-        return userRepository.saveAndFlush(user);
+        User user = userMapper.fromUserCreateRequest(userRequest);
+        User savedUser = userRepository.saveAndFlush(user);
+        UserResponse userResponse = userMapper.toUserResponse(savedUser);
+
+        return userResponse;
     }
 
-    public Optional<User> getUserById(Long id) {
-        User user = userRepository.findById(id).get();
+    @Override
+    public UserResponse getUserById(Long id) {
 
-        if (user.getIsDeleted()) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isPresent() && user.get().getIsDeleted()) {
             throw new NoSuchElementException("Пользователь был удалён!");
         }
 
-        return userRepository.findById(id);
+        return userMapper.toUserResponse(user.get());
     }
 
-    public User updateUser(Long id, String nickname, String password, String fio,
-                           Integer age, String email, LocalDate regdate) {
+    @Override
+    public UserResponse updateUser(Long id, UserRequest userRequest) {
 
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Пользователь " +
-                        "не найден!"));
+        User user;
 
-        if (user.getIsDeleted()) {
+        Optional<User> existingUser = userRepository.findById(id);
+
+        if (existingUser.isPresent() && existingUser.get().getIsDeleted()) {
             throw new NoSuchElementException("Пользователь был удалён!");
         }
 
-        user.setNickname(nickname);
-        user.setPassword(password);
-        user.setFio(fio);
-        user.setAge(age);
-        user.setEmail(email);
-        user.setRegdate(regdate);
+        if (existingUser.isPresent()) {
+            user = existingUser.get();
+        } else {
+            throw new NoSuchElementException("Пользователь не найден!");
+        }
 
-        return userRepository.save(user);
+
+        user.setNickname(userRequest.nickname());
+        user.setPassword(userRequest.password());
+        user.setFio(userRequest.fio());
+        user.setAge(userRequest.age());
+        user.setEmail(userRequest.email());
+
+        User updatedUser = userRepository.saveAndFlush(user);
+
+        return userMapper.toUserResponse(updatedUser);
     }
 
+    @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }

@@ -39,16 +39,6 @@ public class User {
     private LocalDate regdate;
 
     @Column(name = "is_deleted")
-    private Boolean isDeleted = false;
+    private Boolean isDeleted;
 
-    public User(String nickname, String password, String fio, Integer age,
-                String email, LocalDate regdate) {
-
-        this.nickname = nickname;
-        this.password = password;
-        this.fio = fio;
-        this.age = age;
-        this.email = email;
-        this.regdate = regdate;
-    }
 }

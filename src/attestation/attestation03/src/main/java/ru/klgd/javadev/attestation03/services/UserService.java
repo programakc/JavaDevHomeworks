@@ -1,19 +1,15 @@
 package ru.klgd.javadev.attestation03.services;
 
-import ru.klgd.javadev.attestation03.entities.User;
-
-import java.time.LocalDate;
-import java.util.Optional;
+import ru.klgd.javadev.attestation03.dto.UserRequest;
+import ru.klgd.javadev.attestation03.dto.UserResponse;
 
 public interface UserService {
 
-    User createUser(String nickname, String password, String fio, Integer age,
-                    String email, LocalDate regdate);
+    UserResponse createUser(UserRequest userRequest);
 
-    Optional<User> getUserById(Long id);
+    UserResponse getUserById(Long id);
 
-    User updateUser(Long id, String nickname, String password, String fio,
-                    Integer age, String email, LocalDate regdate);
+    UserResponse updateUser(Long id, UserRequest userRequest);
 
     void deleteUser(Long id);
 }

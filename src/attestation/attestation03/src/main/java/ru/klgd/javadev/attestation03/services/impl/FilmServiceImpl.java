@@ -16,26 +16,31 @@ public class FilmServiceImpl implements FilmService {
 
     private final FilmRepository filmRepository;
 
+    @Override
     public List<Film> getAllFilms() {
         return filmRepository.findAll();
     }
 
+    @Override
     public Optional<Film> getFilmByTitle(String title) {
         return filmRepository.findByTitle(title);
     }
 
+    @Override
     public List<Film> getFilmByGenre(String genre) {
         return filmRepository.findAll().stream()
                 .filter(film -> film.getGenre().equals(genre))
                 .collect(Collectors.toList());
     }
 
+    @Override
     public List<Film> getFilmByRelease(Integer release) {
         return filmRepository.findAll().stream()
                 .filter(film -> film.getRelease().equals(release))
                 .collect(Collectors.toList());
     }
 
+    @Override
     public List<Film> getFilmByContent(String content) {
         return filmRepository.findAll().stream()
                 .filter(film -> film.getContent().equals(content))
