@@ -81,8 +81,8 @@ public class FilmControllerTest {
 
         when(filmServiceImpl.getFilmByRelease(Mockito.<Integer>any())).thenReturn(new ArrayList<>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-                String.join("", "/cinema/film/", System.getProperty("jdk.debug"), "/{", System.getProperty("jdk.debug"), "}"),
-                1);
+                String.join("", "/cinema/film/", System.getProperty("jdk.debug"),
+                        "/{", System.getProperty("jdk.debug"), "}"), 1);
 
         MockMvcBuilders.standaloneSetup(filmController)
                 .build()
