@@ -13,7 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(name = "films", schema = "cinema")
 public class Film {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
