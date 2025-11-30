@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres
+    container_name: dbFinalAttestation
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+  app:
+    image: app
+    container_name: app-finalAttestation
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      - DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
+      - DATASOURCE_USERNAME=postgres
+      - DATASOURCE_PASSWORD=postgres
+      - JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8080:8080"
+    command:
+      - java -jar app.jar
